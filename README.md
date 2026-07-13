@@ -9,8 +9,8 @@
 <br/>
 
 <div align="center">
-  <!-- TODO: Replace the 'screenshot.png' path below with your actual screenshot image path/URL -->
-  <img src="screenshot.png" alt="Quantum Gap Dashboard Screenshot" width="800" style="border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+  <!-- TODO: Replace the 'assets/screenshot.png' path below with your actual screenshot image path/URL -->
+  <img src="assets/Homepage.png" alt="Quantum Gap Dashboard Screenshot" width="800" style="border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
 </div>
 
 <br/>
