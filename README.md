@@ -1,4 +1,4 @@
-# Quantum Gap: Band Gap Prediction Dashboard
+# ⚛️ Quantum Gap: Band Gap Prediction Dashboard
 
 ![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
 ![Vite](https://img.shields.io/badge/Vite-B73BFE?style=for-the-badge&logo=vite&logoColor=FFD62E)
@@ -6,50 +6,66 @@
 ![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
 ![scikit-learn](https://img.shields.io/badge/scikit--learn-%23F7931E.svg?style=for-the-badge&logo=scikit-learn&logoColor=white)
 
+> A modern, glassmorphic web application for predicting the band gap energy of materials based on their chemical formulas using machine learning.
+
 <br/>
 
 <div align="center">
-  <!-- TODO: Replace the 'assets/screenshot.png' path below with your actual screenshot image path/URL -->
-  <img src="assets/Homepage.png" alt="Quantum Gap Dashboard Screenshot" width="800" style="border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+  <img src="frontend/src/assets/Homepage.png" alt="Quantum Gap Dashboard Screenshot" width="800" style="border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
 </div>
 
 <br/>
 
-## About the Project
+## 📋 Table of Contents
+- [About the Project](#-about-the-project)
+- [Features](#-features)
+- [Tech Stack](#-tech-stack)
+- [Directory Structure](#-directory-structure)
+- [Getting Started](#-getting-started)
+- [Usage](#-usage)
+- [Project Architecture](#-project-architecture--how-it-works)
+- [License](#-license)
 
-**Quantum Gap** is a web application that predicts the band gap energy (_Vùng cấm năng lượng_) of materials based on their chemical formula. It utilizes a Random Forest machine learning model trained on Materials Project data to classify whether a given material has a High or Low band gap.
+---
 
-The application is designed with a modern glassmorphic UI, fully localized in Vietnamese, providing an intuitive and educational experience for users in materials science.
+## 📖 About the Project
 
-## Features
+**Quantum Gap** is an educational and predictive tool designed for materials science. It predicts whether a material possesses a **High** or **Low** band gap energy (_Vùng cấm năng lượng_) directly from its chemical formula. 
 
-- **Accurate Predictions**: Predicts Band Gap (High/Low) directly from a chemical formula.
-- **Educational Insights**: Provides scientific explanations detailing what High vs. Low band gap means and its implications for material properties.
-- **Simulation Process**: Features a step-by-step calculation simulation to visually demonstrate the process behind the prediction.
-- **Prediction History**: A sleek, glassmorphic history table showing recent predictions for quick reference.
-- **Modern UI**: Clean, professional, and responsive glassmorphic design.
-- **Vietnamese Localization**: Fully translated interface and scientific terminology for Vietnamese users.
+Powered by a Random Forest machine learning model trained on Materials Project data, this application serves as both a predictive utility and an educational platform, fully localized in Vietnamese.
 
-## Tech Stack
+---
+
+## ✨ Features
+
+- **🎯 Accurate Predictions**: Instantly classify the band gap (High/Low) from a chemical formula.
+- **📚 Educational Insights**: Detailed scientific explanations on the physical implications of different band gaps.
+- **⚙️ Simulation Process**: Step-by-step visual demonstration of the calculation and featurization process.
+- **🕒 Prediction History**: A sleek history table to quickly reference recent predictions.
+- **🎨 Modern UI/UX**: Clean, responsive, and professional glassmorphic design.
+- **🌐 Localization**: Fully translated interface and scientific terminology for Vietnamese users.
+
+---
+
+## 🛠 Tech Stack
 
 ### Frontend
-
-- React 18
-- TypeScript
-- Vite
-- Vanilla CSS (Glassmorphism design language)
+- **React 18**
+- **TypeScript**
+- **Vite**
+- **Vanilla CSS** (Glassmorphism design)
 
 ### Backend
-
-- FastAPI (Python)
-- Uvicorn (ASGI server)
+- **FastAPI** (Python)
+- **Uvicorn** (ASGI server)
 
 ### Machine Learning
+- **scikit-learn**: Random Forest classification model
+- **pymatgen & matminer**: Chemical formula parsing and Magpie descriptor featurization
 
-- `scikit-learn`: Random Forest classification model (`joblib` for serialization)
-- `pymatgen` & `matminer`: Chemical formula parsing and featurization (Magpie descriptors)
+---
 
-## Directory Structure
+## 📂 Directory Structure
 
 ```text
 .
@@ -62,26 +78,31 @@ The application is designed with a modern glassmorphic UI, fully localized in Vi
 └── data/                   # Datasets and SQLite DB
 ```
 
-## Getting Started
+---
+
+## 🚀 Getting Started
+
+Follow these instructions to set up the project locally.
 
 ### Prerequisites
 
-- Node.js (v18 or higher)
-- Python 3.9+
+Ensure you have the following installed on your machine:
+- [Node.js](https://nodejs.org/) (v18 or higher)
+- [Python](https://www.python.org/) 3.9+
 - pip (Python package installer)
 
 ### Installation
 
 #### 1. Backend Setup
 
-Open a terminal and navigate to the project root, then to the backend:
+Open a terminal, navigate to the project root, and then to the `backend` directory:
 
 ```bash
 cd backend
 
-# Create a virtual environment (optional but recommended)
+# Create a virtual environment (recommended)
 python -m venv venv
-source venv/bin/activate  # On Windows use `venv\Scripts\activate`
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 
 # Install dependencies
 pip install fastapi uvicorn scikit-learn pymatgen matminer joblib
@@ -89,7 +110,7 @@ pip install fastapi uvicorn scikit-learn pymatgen matminer joblib
 
 #### 2. Frontend Setup
 
-Open a new terminal and navigate to the frontend directory:
+Open a new terminal session, navigate to the `frontend` directory:
 
 ```bash
 cd frontend
@@ -98,18 +119,20 @@ cd frontend
 npm install
 ```
 
-## Usage
+---
 
-To run the application locally, you will need to start both the backend and frontend servers.
+## 💻 Usage
+
+To run the application locally, start both the backend and frontend servers simultaneously.
 
 ### Start the Backend Server
 
 ```bash
 cd backend
+source venv/bin/activate  # Ensure your virtual env is active
 uvicorn main:app --reload
 ```
-
-The backend API will run at `http://localhost:8000`.
+_The API will be available at `http://localhost:8000`._
 
 ### Start the Frontend Server
 
@@ -117,17 +140,22 @@ The backend API will run at `http://localhost:8000`.
 cd frontend
 npm run dev
 ```
+_The frontend application will be available at the local URL provided by Vite (usually `http://localhost:5173`)._
 
-The frontend application will be available at the local URL provided by Vite (usually `http://localhost:5173`).
+---
 
-## Project Architecture & How it Works
+## 🧠 Project Architecture & How it Works
 
-1. **User Input**: The user enters a chemical formula (e.g., `NaCl`, `SiO2`) in the React frontend.
-2. **API Request**: The frontend sends the formula to the FastAPI backend via a POST request.
-3. **Featurization**: The backend uses `pymatgen` to parse the composition and `matminer` to extract Magpie descriptors (elemental properties based on the formula).
-4. **Prediction**: The extracted features are passed into a pre-trained `scikit-learn` Random Forest model, which predicts whether the band gap is "High" or "Low".
-5. **Response & Visualization**: The backend returns the prediction to the frontend, which displays it using a step-by-step loading animation, followed by the result and scientific explanation.
+1. **User Input**: The user enters a chemical formula (e.g., `NaCl`, `SiO2`) into the React interface.
+2. **API Request**: The frontend transmits the formula to the FastAPI backend via a POST request.
+3. **Featurization**: 
+   - The backend utilizes `pymatgen` to parse the chemical composition.
+   - It then uses `matminer` to extract Magpie descriptors (elemental properties based on the formula).
+4. **Prediction**: The extracted features are fed into a pre-trained `scikit-learn` Random Forest model, classifying the band gap as "High" or "Low".
+5. **Response & Visualization**: The result is returned to the frontend and displayed with step-by-step loading animations, followed by scientific insights.
 
-## License
+---
+
+## 📄 License
 
 Distributed under the MIT License. See `LICENSE` for more information.
