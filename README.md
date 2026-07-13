@@ -50,18 +50,18 @@ Powered by a Random Forest machine learning model trained on Materials Project d
 ## 🛠 Tech Stack
 
 ### Frontend
-- **React 18**
-- **TypeScript**
-- **Vite**
-- **Vanilla CSS** (Glassmorphism design)
+- **[React 18](https://react.dev/)** - UI Library
+- **[TypeScript](https://www.typescriptlang.org/)** - Static Typing
+- **[Vite](https://vitejs.dev/)** - Build Tool
+- **Vanilla CSS** - Styling (Glassmorphism design)
 
 ### Backend
-- **FastAPI** (Python)
-- **Uvicorn** (ASGI server)
+- **[FastAPI](https://fastapi.tiangolo.com/)** - Web Framework (Python)
+- **[Uvicorn](https://www.uvicorn.org/)** - ASGI Server
 
 ### Machine Learning
-- **scikit-learn**: Random Forest classification model
-- **pymatgen & matminer**: Chemical formula parsing and Magpie descriptor featurization
+- **[scikit-learn](https://scikit-learn.org/)** - Random Forest classification model
+- **[pymatgen](https://pymatgen.org/)** & **[matminer](https://hackingmaterials.lbl.gov/matminer/)** - Chemical formula parsing and Magpie descriptor featurization
 
 ---
 
