@@ -50,18 +50,18 @@ Powered by a Random Forest machine learning model trained on Materials Project d
 ## 🛠 Tech Stack
 
 ### Frontend
-- **React 18**
-- **TypeScript**
-- **Vite**
-- **Vanilla CSS** (Glassmorphism design)
+- ![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB) **React 18**
+- ![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white) **TypeScript**
+- ![Vite](https://img.shields.io/badge/vite-%23646CFF.svg?style=for-the-badge&logo=vite&logoColor=white) **Vite**
+- ![CSS3](https://img.shields.io/badge/css3-%231572B6.svg?style=for-the-badge&logo=css3&logoColor=white) **Vanilla CSS** (Glassmorphism design)
 
 ### Backend
-- **FastAPI** (Python)
-- **Uvicorn** (ASGI server)
+- ![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi) **FastAPI** (Python)
+- ![Uvicorn](https://img.shields.io/badge/uvicorn-%232C3E50.svg?style=for-the-badge&logo=gunicorn&logoColor=white) **Uvicorn** (ASGI server)
 
 ### Machine Learning
-- **scikit-learn**: Random Forest classification model
-- **pymatgen & matminer**: Chemical formula parsing and Magpie descriptor featurization
+- ![scikit-learn](https://img.shields.io/badge/scikit--learn-%23F7931E.svg?style=for-the-badge&logo=scikit-learn&logoColor=white) **scikit-learn**: Random Forest classification model
+- ![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54) **pymatgen & matminer**: Chemical formula parsing and Magpie descriptor featurization
 
 ---
 
