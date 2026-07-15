@@ -84,6 +84,8 @@ Powered by a Random Forest machine learning model trained on Materials Project d
 
 Follow these instructions to set up the project locally.
 
+> ⚠️ **Important**: All commands must be run from the **project root** directory (`Band_Gap_Prediction_From_Chemical_Formula/`), unless otherwise specified.
+
 ### Prerequisites
 
 Ensure you have the following installed on your machine:
@@ -93,54 +95,77 @@ Ensure you have the following installed on your machine:
 
 ### Installation
 
-#### 1. Backend Setup
-
-Open a terminal, navigate to the project root, and then to the `backend` directory:
+#### 1. Clone the repository and navigate to the project root
 
 ```bash
-cd backend
-
-# Create a virtual environment (recommended)
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-
-# Install dependencies
-pip install fastapi uvicorn scikit-learn pymatgen matminer joblib
+git clone <your-repo-url>
+cd Band_Gap_Prediction_From_Chemical_Formula
 ```
 
-#### 2. Frontend Setup
+#### 2. Backend Setup
 
-Open a new terminal session, navigate to the `frontend` directory:
+From the **project root**, create and activate the virtual environment, then install dependencies:
 
 ```bash
-cd frontend
+# Create a virtual environment in the project root
+python -m venv .venv
 
-# Install NPM packages
-npm install
+# Activate it:
+source .venv/bin/activate        # macOS / Linux
+# .venv\Scripts\activate          # Windows
+
+# Install backend dependencies
+pip install -r backend/requirements.txt
+```
+
+#### 3. Frontend Setup
+
+From the **project root**, install npm packages:
+
+```bash
+cd frontend && npm install && cd ..
 ```
 
 ---
 
 ## 💻 Usage
 
-To run the application locally, start both the backend and frontend servers simultaneously.
+To run the application locally, you need **two separate terminal windows**, both opened at the **project root**.
 
-### Start the Backend Server
+### Option A — Makefile (Quickest)
 
 ```bash
-cd backend
-source venv/bin/activate  # Ensure your virtual env is active
-uvicorn main:app --reload
+# Terminal 1 — start the backend
+make serve
+
+# Terminal 2 — start the frontend
+make dev
 ```
-_The API will be available at `http://localhost:8000`._
 
-### Start the Frontend Server
+### Option B — Manual Commands
+
+#### Terminal 1 — Backend Server
 
 ```bash
+# From the project root, activate the virtual environment
+source .venv/bin/activate        # macOS / Linux
+# .venv\Scripts\activate          # Windows
+
+# Start the FastAPI server
+uvicorn backend.app.main:app --reload --port 8000
+```
+_The API will be available at `http://127.0.0.1:8000`. Interactive docs at `http://127.0.0.1:8000/docs`._
+
+#### Terminal 2 — Frontend Server
+
+```bash
+# Navigate into the frontend folder
 cd frontend
+
+# Start the Vite dev server
 npm run dev
 ```
-_The frontend application will be available at the local URL provided by Vite (usually `http://localhost:5173`)._
+_The app will be available at `http://localhost:5173`._
 
 ---
 
