@@ -1,26 +1,28 @@
 import { useState } from 'react';
+import { NavBar } from './components/NavBar';
 import { PredictionForm } from './components/PredictionForm';
 import { ResultCard } from './components/ResultCard';
-import { HistoryTable } from './components/HistoryTable';
+import { DashboardPage } from './components/DashboardPage';
+import { useRouter } from './hooks/useRouter';
 import { apiClient, type PredictResponse } from './api/client';
 import './App.css';
 
-function App() {
+// ─── Home Page ────────────────────────────────────────────────────────────────
+
+function HomePage() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<PredictResponse | null>(null);
-  const [historyTrigger, setHistoryTrigger] = useState(0);
 
   const handlePredict = async (formula: string) => {
     setLoading(true);
-    setResult(null); // Clear previous result to show the calculation process
-    
+    setResult(null);
+
     const fetchPromise = apiClient.predict(formula);
     const delayPromise = new Promise(resolve => setTimeout(resolve, 15000));
 
     try {
       const [response] = await Promise.all([fetchPromise, delayPromise]);
       setResult(response);
-      setHistoryTrigger(prev => prev + 1); // trigger history refresh
     } finally {
       setLoading(false);
     }
@@ -89,11 +91,22 @@ function App() {
           </div>
         </div>
       </div>
-
-      <section>
-        <HistoryTable refreshTrigger={historyTrigger} />
-      </section>
     </div>
+  );
+}
+
+// ─── App Shell ────────────────────────────────────────────────────────────────
+
+function App() {
+  const { path, navigate } = useRouter();
+
+  return (
+    <>
+      <NavBar currentPath={path} navigate={navigate} />
+      <div className="page-wrapper">
+        {path === '/dashboard' ? <DashboardPage /> : <HomePage />}
+      </div>
+    </>
   );
 }
 

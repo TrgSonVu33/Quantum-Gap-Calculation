@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react';
 import { apiClient, type QueryRecord } from '../api/client';
 
-export function HistoryTable({ refreshTrigger }: { refreshTrigger: number }) {
+export function HistoryTable({ refreshTrigger, showAll = false }: { refreshTrigger: number; showAll?: boolean }) {
   const [queries, setQueries] = useState<QueryRecord[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchHistory = async () => {
       try {
-        const data = await apiClient.getHistory(10); // fetch last 10
+        const data = await apiClient.getHistory(showAll ? 200 : 10);
         setQueries(data.queries);
       } catch (err) {
         console.error('Failed to load history', err);
@@ -20,8 +20,16 @@ export function HistoryTable({ refreshTrigger }: { refreshTrigger: number }) {
     fetchHistory();
   }, [refreshTrigger]);
 
-  if (loading) return null;
-  if (queries.length === 0) return null;
+  if (loading) return (
+    <div className="history-section animate-fade-in" style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-secondary)' }}>
+      Đang tải lịch sử…
+    </div>
+  );
+  if (queries.length === 0) return (
+    <div className="history-section animate-fade-in" style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-secondary)' }}>
+      Chưa có dự đoán nào được lưu.
+    </div>
+  );
 
   const translateClassification = (cls: string) => {
     switch (cls.toLowerCase()) {
@@ -41,7 +49,7 @@ export function HistoryTable({ refreshTrigger }: { refreshTrigger: number }) {
             <tr>
               <th>Công thức</th>
               <th>Vùng cấm năng lượng (eV)</th>
-              <th>Phân loại</th>
+              <th>Phân loại</th>  
             </tr>
           </thead>
           <tbody>
