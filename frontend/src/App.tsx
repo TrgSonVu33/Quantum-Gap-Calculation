@@ -80,7 +80,7 @@ function HomePage() {
       <header className="hero-section animate-fade-in">
         <h1 className="hero-title">Quantum Gap Calculation</h1>
         <p className="hero-subtitle">
-          Dự đoán tức thời vùng cấm năng lượng (Band Gap) của các vật liệu vô cơ từ công thức hóa học sử dụng mô hình Random Forest được huấn luyện trên Materials Project.
+          Dự đoán vùng cấm năng lượng (Band Gap) của các vật liệu vô cơ từ công thức hóa học sử dụng mô hình Random Forest được huấn luyện trên Materials Project.
         </p>
       </header>
 
