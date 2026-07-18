@@ -12,17 +12,64 @@ import './App.css';
 function HomePage() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<PredictResponse | null>(null);
+  const [batchProgress, setBatchProgress] = useState<{total: number, completed: number} | null>(null);
 
   const handlePredict = async (formula: string) => {
     setLoading(true);
     setResult(null);
 
-    const fetchPromise = apiClient.predict(formula);
-    const delayPromise = new Promise(resolve => setTimeout(resolve, 15000));
+    try {
+      const asyncRes = await apiClient.predictAsync(formula);
+      const taskId = asyncRes.task_id;
+      
+      // Poll
+      while (true) {
+        const status = await apiClient.getTaskStatus(taskId);
+        if (status.status === 'SUCCESS') {
+          setResult(status.result!);
+          break;
+        } else if (status.status === 'FAILURE') {
+          throw new Error(status.error || 'Dự đoán thất bại');
+        }
+        await new Promise(resolve => setTimeout(resolve, 1000));
+      }
+    } catch (err: any) {
+      alert(err.message || 'Lỗi dự đoán');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleBatchPredict = async (formulas: string[]) => {
+    setLoading(true);
+    setResult(null);
+    setBatchProgress({ total: formulas.length, completed: 0 });
 
     try {
-      const [response] = await Promise.all([fetchPromise, delayPromise]);
-      setResult(response);
+      const res = await apiClient.predictBatch(formulas);
+      let completed = 0;
+      
+      const pendingTasks = new Set(res.task_ids);
+      
+      while (pendingTasks.size > 0) {
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        
+        for (const taskId of Array.from(pendingTasks)) {
+          const status = await apiClient.getTaskStatus(taskId);
+          if (status.status === 'SUCCESS' || status.status === 'FAILURE') {
+            pendingTasks.delete(taskId);
+            completed++;
+            setBatchProgress({ total: formulas.length, completed });
+            if (status.status === 'SUCCESS' && completed === formulas.length) {
+              setResult(status.result!);
+            }
+          }
+        }
+      }
+      setTimeout(() => setBatchProgress(null), 3000);
+    } catch(err: any) {
+      alert(err.message || 'Lỗi dự đoán hàng loạt');
+      setBatchProgress(null);
     } finally {
       setLoading(false);
     }
@@ -38,7 +85,16 @@ function HomePage() {
       </header>
 
       <main className="main-content">
-        <PredictionForm onSubmit={handlePredict} isLoading={loading} />
+        <PredictionForm onSubmit={handlePredict} onBatchSubmit={handleBatchPredict} isLoading={loading} />
+        {batchProgress && (
+          <div className="card glass-panel animate-fade-in" style={{ textAlign: 'center', marginTop: '1rem' }}>
+            <h3>Đang xử lý hàng loạt...</h3>
+            <div style={{ background: '#eee', borderRadius: '4px', height: '10px', width: '100%', overflow: 'hidden', marginTop: '10px' }}>
+              <div style={{ background: 'var(--primary-color)', height: '100%', width: `${(batchProgress.completed / batchProgress.total) * 100}%`, transition: 'width 0.3s' }}></div>
+            </div>
+            <p style={{ marginTop: '10px' }}>{batchProgress.completed} / {batchProgress.total} hoàn thành</p>
+          </div>
+        )}
         <ResultCard result={result} isLoading={loading} />
       </main>
 

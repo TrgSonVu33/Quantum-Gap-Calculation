@@ -55,8 +55,8 @@ DB_PATH = DATA_DIR / "bandgap.db"
 load_dotenv(PROJECT_ROOT / ".env")
 MP_API_KEY = os.getenv("MP_API_KEY")
 
-# How many materials to target (set to None for no cap)
-MAX_MATERIALS = 5_000
+# Total unique materials to have in DB after this run
+MAX_MATERIALS = 20000
 
 # ---------------------------------------------------------------------------
 # Database helpers
@@ -100,13 +100,32 @@ def init_db(db_path: Path) -> sqlite3.Connection:
 # ---------------------------------------------------------------------------
 
 
-def fetch_materials(api_key: str, max_materials: Optional[int] = MAX_MATERIALS) -> List[Dict]:
+def load_existing_ids(conn: sqlite3.Connection) -> set:
+    """Return the set of material_ids already stored in the DB."""
+    rows = conn.execute("SELECT material_id FROM training_data").fetchall()
+    ids = {row[0] for row in rows}
+    print(f"📂  Found {len(ids)} existing materials in DB.")
+    return ids
+
+
+def fetch_materials(
+    api_key: str,
+    existing_ids: set,
+    max_materials: int = MAX_MATERIALS,
+) -> List[Dict]:
     """
     Query the Materials Project for stable inorganic materials.
 
-    Returns a list of dicts with keys: material_id, formula, band_gap_ev.
+    Filters out material_ids already in the DB and returns only new records
+    up to (max_materials - len(existing_ids)) so the total stays at max_materials.
     """
+    needed = max_materials - len(existing_ids)
+    if needed <= 0:
+        print(f"✅  DB already has {len(existing_ids)} materials — nothing to fetch.")
+        return []
+
     print(f"🔗  Connecting to Materials Project API …")
+    print(f"🎯  Need {needed} new materials to reach {max_materials} total.")
 
     with MPRester(api_key) as mpr:
         docs = mpr.materials.summary.search(
@@ -119,22 +138,22 @@ def fetch_materials(api_key: str, max_materials: Optional[int] = MAX_MATERIALS) 
 
     records = []
     for doc in docs:
-        # band_gap can be None for some entries — skip those
         if doc.band_gap is None:
+            continue
+        mid = str(doc.material_id)
+        if mid in existing_ids:          # skip already-stored materials
             continue
         records.append(
             {
-                "material_id": str(doc.material_id),
+                "material_id": mid,
                 "formula": doc.formula_pretty,
                 "band_gap_ev": float(doc.band_gap),
             }
         )
+        if len(records) >= needed:       # stop once we have enough new ones
+            break
 
-    # If the user wants to cap the dataset size
-    if max_materials and len(records) > max_materials:
-        records = records[:max_materials]
-
-    print(f"✅  Prepared {len(records)} records (after filtering nulls).")
+    print(f"✅  {len(records)} new unique records ready to insert.")
     return records
 
 
@@ -215,8 +234,10 @@ def main() -> None:
     conn = init_db(DB_PATH)
 
     try:
-        records = fetch_materials(MP_API_KEY)
-        insert_records(conn, records)
+        existing_ids = load_existing_ids(conn)
+        records = fetch_materials(MP_API_KEY, existing_ids)
+        if records:
+            insert_records(conn, records)
         validate(conn)
     finally:
         conn.close()

@@ -1,12 +1,27 @@
 // api/client.ts
 
-export const API_BASE_URL = 'http://localhost:8000/api/v1';
+export const API_BASE_URL = '/api/v1';
 
 export interface PredictResponse {
   formula: string;
   predicted_band_gap_ev: number;
   classification: string;
   timestamp: string;
+}
+
+export interface AsyncPredictResponse {
+  task_id: string;
+}
+
+export interface BatchPredictResponse {
+  task_ids: string[];
+}
+
+export interface TaskStatusResponse {
+  task_id: string;
+  status: string;
+  result?: PredictResponse;
+  error?: string;
 }
 
 export interface QueryRecord {
@@ -33,6 +48,46 @@ export const apiClient = {
     if (!response.ok) {
       const errorData = await response.json();
       throw new Error(errorData.detail || 'Failed to predict band gap');
+    }
+
+    return response.json();
+  },
+
+  async predictAsync(formula: string): Promise<AsyncPredictResponse> {
+    const response = await fetch(`${API_BASE_URL}/predict/async`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ formula }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.detail || 'Failed to dispatch async prediction');
+    }
+
+    return response.json();
+  },
+
+  async predictBatch(formulas: string[]): Promise<BatchPredictResponse> {
+    const response = await fetch(`${API_BASE_URL}/predict/batch`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ formulas }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.detail || 'Failed to dispatch batch prediction');
+    }
+
+    return response.json();
+  },
+
+  async getTaskStatus(taskId: string): Promise<TaskStatusResponse> {
+    const response = await fetch(`${API_BASE_URL}/predict/status/${taskId}`);
+    
+    if (!response.ok) {
+      throw new Error('Failed to fetch task status');
     }
 
     return response.json();

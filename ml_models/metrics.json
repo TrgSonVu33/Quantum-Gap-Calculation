@@ -1,110 +1,110 @@
 {
   "metrics": {
-    "mae_ev": 0.3987,
-    "rmse_ev": 0.6921,
-    "r2_score": 0.835,
-    "n_test_samples": 1000
+    "mae_ev": 0.3576,
+    "rmse_ev": 0.6516,
+    "r2_score": 0.8648,
+    "n_test_samples": 4000
   },
   "top_features": [
     {
       "rank": 1,
-      "feature": "MagpieData mean Electronegativity",
-      "importance": 0.280815
+      "feature": "MagpieData mode MeltingT",
+      "importance": 0.406749
     },
     {
       "rank": 2,
       "feature": "MagpieData mean NdValence",
-      "importance": 0.09067
+      "importance": 0.066265
     },
     {
       "rank": 3,
-      "feature": "MagpieData mean Row",
-      "importance": 0.06216
+      "feature": "MagpieData avg_dev NdValence",
+      "importance": 0.058983
     },
     {
       "rank": 4,
-      "feature": "MagpieData maximum NdValence",
-      "importance": 0.060861
+      "feature": "MagpieData maximum MendeleevNumber",
+      "importance": 0.03646
     },
     {
       "rank": 5,
-      "feature": "MagpieData mean CovalentRadius",
-      "importance": 0.042955
+      "feature": "MagpieData mean MeltingT",
+      "importance": 0.025808
     },
     {
       "rank": 6,
-      "feature": "MagpieData mean NpValence",
-      "importance": 0.028196
+      "feature": "MagpieData avg_dev Column",
+      "importance": 0.015876
     },
     {
       "rank": 7,
-      "feature": "MagpieData avg_dev Electronegativity",
-      "importance": 0.019378
+      "feature": "MagpieData mean NpValence",
+      "importance": 0.015682
     },
     {
       "rank": 8,
-      "feature": "MagpieData mean GSbandgap",
-      "importance": 0.017862
+      "feature": "MagpieData maximum NfUnfilled",
+      "importance": 0.015181
     },
     {
       "rank": 9,
-      "feature": "MagpieData avg_dev NdValence",
-      "importance": 0.016015
+      "feature": "MagpieData maximum MeltingT",
+      "importance": 0.014792
     },
     {
       "rank": 10,
-      "feature": "MagpieData mode GSbandgap",
-      "importance": 0.015961
+      "feature": "MagpieData range NfUnfilled",
+      "importance": 0.014525
     },
     {
       "rank": 11,
-      "feature": "MagpieData minimum NValence",
-      "importance": 0.015756
+      "feature": "MagpieData range MeltingT",
+      "importance": 0.012729
     },
     {
       "rank": 12,
-      "feature": "MagpieData avg_dev Column",
-      "importance": 0.015538
+      "feature": "MagpieData mode Electronegativity",
+      "importance": 0.012704
     },
     {
       "rank": 13,
-      "feature": "MagpieData avg_dev NUnfilled",
-      "importance": 0.013044
+      "feature": "MagpieData avg_dev Electronegativity",
+      "importance": 0.011212
     },
     {
       "rank": 14,
-      "feature": "MagpieData avg_dev SpaceGroupNumber",
-      "importance": 0.01168
+      "feature": "MagpieData mean Electronegativity",
+      "importance": 0.01069
     },
     {
       "rank": 15,
-      "feature": "MagpieData avg_dev NpValence",
-      "importance": 0.011647
+      "feature": "MagpieData mean Row",
+      "importance": 0.009711
     },
     {
       "rank": 16,
-      "feature": "MagpieData mode MeltingT",
-      "importance": 0.010864
+      "feature": "MagpieData mean SpaceGroupNumber",
+      "importance": 0.009322
     },
     {
       "rank": 17,
-      "feature": "MagpieData mean NUnfilled",
-      "importance": 0.01032
+      "feature": "MagpieData avg_dev NValence",
+      "importance": 0.009287
     },
     {
       "rank": 18,
-      "feature": "MagpieData mean MeltingT",
-      "importance": 0.010173
+      "feature": "MagpieData avg_dev NUnfilled",
+      "importance": 0.00897
     },
     {
       "rank": 19,
-      "feature": "MagpieData mean NdUnfilled",
-      "importance": 0.010147
+      "feature": "MagpieData mean NUnfilled",
+      "importance": 0.008704
     },
     {
       "rank": 20,
-      "feature": "MagpieData avg_dev NValence",
-      "importance": 0.010009
+      "feature": "MagpieData range Electronegativity",
+      "importance": 0.007884
     }
   ]
 }

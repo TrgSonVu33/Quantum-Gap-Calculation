@@ -1,0 +1,8 @@
+# Backend Docker ignore
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+Dockerfile
+.dockerignore

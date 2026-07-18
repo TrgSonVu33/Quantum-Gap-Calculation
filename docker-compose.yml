@@ -1,0 +1,78 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# Docker Compose — Quantum Gap Calculation
+#
+# Services:
+#   backend       — FastAPI + Uvicorn (port 8000)
+#   frontend      — Nginx serving React build (port 80)
+#   redis         — Message broker & result backend for Celery
+#   celery-worker — Background task worker for async predictions
+# ──────────────────────────────────────────────────────────────────────────────
+
+services:
+  # ── Backend API ────────────────────────────────────────────────────────────
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: bandgap-backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/app/data
+      - ./ml_models:/app/ml_models
+    environment:
+      - PYTHONUNBUFFERED=1
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    depends_on:
+      - redis
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/v1/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # ── Frontend (Nginx) ──────────────────────────────────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: bandgap-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+  # ── Redis (Celery broker & result backend) ─────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: bandgap-redis
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── Celery Worker ──────────────────────────────────────────────────────────
+  celery-worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: bandgap-celery-worker
+    command: celery -A backend.app.worker worker --loglevel=info --concurrency=2
+    volumes:
+      - ./data:/app/data
+      - ./ml_models:/app/ml_models
+    environment:
+      - PYTHONUNBUFFERED=1
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    depends_on:
+      - redis
+    restart: unless-stopped

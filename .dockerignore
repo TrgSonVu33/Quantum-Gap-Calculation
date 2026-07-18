@@ -8,17 +8,12 @@ build/
 venv/
 env/
 
-# ---- Data & Models (generated) ----
-data/
-ml_models/*.joblib
-mlruns/
-
-# ---- Environment ----
-.env
-
-# ---- Node / Frontend ----
+# ---- Node ----
 frontend/node_modules/
-frontend/dist/
+
+# ---- Git ----
+.git/
+.gitignore
 
 # ---- IDE ----
 .vscode/
@@ -29,3 +24,10 @@ frontend/dist/
 
 # ---- Jupyter ----
 .ipynb_checkpoints/
+
+# ---- Misc ----
+.env.example
+README.md
+Makefile
+assets/
+.agents/

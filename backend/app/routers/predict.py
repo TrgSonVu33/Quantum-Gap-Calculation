@@ -9,11 +9,15 @@ import sqlite3
 from datetime import datetime, timezone
 from pathlib import Path
 
+from typing import List, Optional, Dict, Any
+
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 
 from backend.app.services.featurizer import CompositionFeaturizer
 from backend.app.services.predictor import BandGapPredictor
+from backend.app.worker import predict_band_gap_task, celery_app
+from celery.result import AsyncResult
 
 # ---------------------------------------------------------------------------
 # Configuration
@@ -49,6 +53,25 @@ class PredictResponse(BaseModel):
     predicted_band_gap_ev: float
     classification: str
     timestamp: str
+
+
+class AsyncPredictResponse(BaseModel):
+    task_id: str
+
+
+class BatchPredictRequest(BaseModel):
+    formulas: List[str] = Field(..., examples=[["GaAs", "NaCl", "Fe2O3"]], description="List of chemical formulas")
+
+
+class BatchPredictResponse(BaseModel):
+    task_ids: List[str]
+
+
+class TaskStatusResponse(BaseModel):
+    task_id: str
+    status: str
+    result: Optional[Dict[str, Any]] = None
+    error: Optional[str] = None
 
 
 # ---------------------------------------------------------------------------
@@ -104,3 +127,45 @@ async def predict_band_gap(request: PredictRequest) -> PredictResponse:
         classification=classification,
         timestamp=timestamp,
     )
+
+
+@router.post("/predict/async", response_model=AsyncPredictResponse)
+async def predict_band_gap_async(request: PredictRequest) -> AsyncPredictResponse:
+    """
+    Dispatch a prediction task to the Celery worker.
+    Returns a task_id immediately.
+    """
+    task = predict_band_gap_task.delay(request.formula.strip())
+    return AsyncPredictResponse(task_id=task.id)
+
+
+@router.post("/predict/batch", response_model=BatchPredictResponse)
+async def predict_band_gap_batch(request: BatchPredictRequest) -> BatchPredictResponse:
+    """
+    Dispatch multiple prediction tasks to Celery.
+    Returns a list of task_ids.
+    """
+    task_ids = []
+    for formula in request.formulas:
+        if formula.strip():
+            task = predict_band_gap_task.delay(formula.strip())
+            task_ids.append(task.id)
+    return BatchPredictResponse(task_ids=task_ids)
+
+
+@router.get("/predict/status/{task_id}", response_model=TaskStatusResponse)
+async def get_task_status(task_id: str) -> TaskStatusResponse:
+    """
+    Check the status of an async prediction task.
+    """
+    task_result = AsyncResult(task_id, app=celery_app)
+    response = TaskStatusResponse(
+        task_id=task_id,
+        status=task_result.status
+    )
+    if task_result.status == "SUCCESS":
+        response.result = task_result.result
+    elif task_result.status == "FAILURE":
+        response.error = str(task_result.result)
+    
+    return response
